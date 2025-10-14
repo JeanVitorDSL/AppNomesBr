@@ -41,7 +41,6 @@ namespace AppNomesBr.Service
 
         public async Task InserirNovoRegistroNoRanking(string nome, string sexo = null)
         {
-            // ===== CORREÇÃO: ADICIONADO O TRY-CATCH E O LOGGER =====
             try
             {
                 logger.LogInformation("Inserir novo registro no ranking");
@@ -60,9 +59,10 @@ namespace AppNomesBr.Service
 
                 List<NomesBr> antigos = await nomesBrRepository.GetAll();
                 antigos.Add(novoRegistro);
-                await AtualizarRanking(antigos);
 
-                novoRegistro.Ranking = antigos[^1].Ranking;
+                var nomesOrdenados = await AtualizarRanking(antigos);
+
+                novoRegistro.Ranking = nomesOrdenados.First(x => x.Nome == novoRegistro.Nome).Ranking;
 
                 await nomesBrRepository.Create(novoRegistro);
             }
@@ -87,7 +87,6 @@ namespace AppNomesBr.Service
                     Frequencia = consultaTodos[i].Frequencia,
                     Nome = consultaTodos[i].Nome,
                     Ranking = consultaTodos[i].Ranking,
-                    // ===== CORREÇÃO: ADICIONADO O CAMPO SEXO PARA EXIBIÇÃO NA TELA =====
                     Sexo = consultaTodos[i].Sexo
                 };
                 retorno[0].Resultado?.Add(novo);
@@ -97,7 +96,6 @@ namespace AppNomesBr.Service
             return retorno.ToArray();
         }
 
-        // Seus métodos privados (FormataPeriodo, OrganizarRanking, AtualizarRanking) continuam iguais
         private static string FormataPeriodo(List<FrequenciaPeriodo>? periodo)
         {
             if (periodo == null || !periodo.Any()) return string.Empty;
@@ -137,11 +135,13 @@ namespace AppNomesBr.Service
             return ordenados;
         }
 
-        private async Task AtualizarRanking(List<NomesBr> nomes)
+        private async Task<List<NomesBr>> AtualizarRanking(List<NomesBr> nomes)
         {
             nomes = OrganizarRanking(nomes);
             foreach (var nome in nomes)
                 await nomesBrRepository.Update(nome);
+
+            return nomes;
         }
     }
 }

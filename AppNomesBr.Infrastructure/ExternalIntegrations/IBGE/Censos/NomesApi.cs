@@ -1,6 +1,8 @@
 ﻿using AppNomesBr.Domain.Interfaces.ExternalIntegrations.IBGE.Censos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Maui.Controls;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AppNomesBr.Infrastructure.ExternalIntegrations.IBGE.Censos
 {
@@ -13,7 +15,6 @@ namespace AppNomesBr.Infrastructure.ExternalIntegrations.IBGE.Censos
         public NomesApi(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.rankingEndpoint = baseUrl + this.rankingEndpoint;
         }
 
         public async Task<string> RetornaCensosNomesRanking(string cidade = null, string sexo = null)
@@ -36,6 +37,9 @@ namespace AppNomesBr.Infrastructure.ExternalIntegrations.IBGE.Censos
             }
 
             var response = await httpClient.GetAsync(endpoint);
+
+            response.EnsureSuccessStatusCode();
+
             return await response.Content.ReadAsStringAsync();
         }
 
@@ -46,7 +50,11 @@ namespace AppNomesBr.Infrastructure.ExternalIntegrations.IBGE.Censos
             {
                 url += $"?sexo={sexo.ToUpper()}";
             }
+
             var response = await httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
             return await response.Content.ReadAsStringAsync();
         }
     }

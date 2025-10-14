@@ -9,16 +9,15 @@ public partial class RankingNomesBrasileiros : ContentPage
     {
         InitializeComponent();
         this.service = service;
-        BtnAtualizar.Clicked += BtnAtualizar_Clicked; // Conecta o botão
+        BtnAtualizar.Clicked += BtnAtualizar_Clicked;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await CarregarNomes(); // Carrega a lista inicial
+        await CarregarNomes();
     }
 
-    // Método que é chamado ao clicar no botão
     private async void BtnAtualizar_Clicked(object sender, EventArgs e)
     {
         var cidade = TxtCidade.Text;
@@ -26,7 +25,6 @@ public partial class RankingNomesBrasileiros : ContentPage
         await CarregarNomes(cidade, sexo);
     }
 
-    // Método de carregamento agora aceita filtros
     private async Task CarregarNomes(string cidade = null, string sexo = null)
     {
         var result = await service.ListaRanking(cidade, sexo);
