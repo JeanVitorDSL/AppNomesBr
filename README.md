@@ -38,7 +38,7 @@ Para cumprir o objetivo principal de filtrar os dados e provar o consumo da API,
 
 1.  Clone o repositório para a sua máquina local:
     ```bash
-    git clone URL_DO_SEU_REPOSITORIO_AQUI](https://github.com/JeanVitorDSL/AppNomesBr)
+    git clone https://github.com/JeanVitorDSL/AppNomesBr
     ```
 2.  Abra o arquivo da solução (`AppNomesBr.sln`) no Visual Studio.
 3.  Restaure os pacotes NuGet (geralmente acontece de forma automática).
